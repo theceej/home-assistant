@@ -87,6 +87,8 @@ ATTR_FLASH = "flash"
 FLASH_SHORT = "short"
 FLASH_LONG = "long"
 
+# If the light supports color changing
+ATTR_COLOR_SUPPORTED = "color_supported"
 
 LIGHT_PROFILES_FILE = "light_profiles.csv"
 

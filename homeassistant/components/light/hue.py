@@ -8,7 +8,7 @@ from homeassistant.helpers import ToggleDevice
 from homeassistant.const import ATTR_FRIENDLY_NAME, CONF_HOST
 from homeassistant.components.light import (
     ATTR_BRIGHTNESS, ATTR_XY_COLOR, ATTR_TRANSITION,
-    ATTR_FLASH, FLASH_LONG, FLASH_SHORT)
+    ATTR_FLASH, FLASH_LONG, FLASH_SHORT, ATTR_COLOR_SUPPORTED)
 
 MIN_TIME_BETWEEN_SCANS = timedelta(seconds=10)
 MIN_TIME_BETWEEN_FORCED_SCANS = timedelta(seconds=1)
@@ -93,8 +93,10 @@ class HueLight(ToggleDevice):
         if ATTR_BRIGHTNESS in kwargs:
             command['bri'] = kwargs[ATTR_BRIGHTNESS]
 
-        if ATTR_XY_COLOR in kwargs:
-            command['xy'] = kwargs[ATTR_XY_COLOR]
+        if 'Color' in self.info['type']:
+            if ATTR_XY_COLOR in kwargs:
+                command['xy'] = kwargs[ATTR_XY_COLOR]
+                print('Colour light')
 
         flash = kwargs.get(ATTR_FLASH)
 
@@ -130,9 +132,12 @@ class HueLight(ToggleDevice):
             ATTR_FRIENDLY_NAME: self.get_name()
         }
 
+        attr[ATTR_COLOR_SUPPORTED] = 'Color' in self.info['type']
+
         if self.is_on():
             attr[ATTR_BRIGHTNESS] = self.info['state']['bri']
-            attr[ATTR_XY_COLOR] = self.info['state']['xy']
+            if 'Color' in self.info['type']:
+                attr[ATTR_XY_COLOR] = self.info['state']['xy']
 
         return attr
 

@@ -29,8 +29,12 @@
         on-core-change="{{brightnessSliderChanged}}">
       </paper-slider>
     </div>
-    <color-picker id="colorpicker" width="350" height="200">
-    </color-picker>
+    <div id="colorpickercontainer">
+      <template if='{{stateObj.attributes.color_supported}}'>
+        <color-picker id="colorpicker" width="350" height="200">
+        </color-picker>
+      </template>
+    </div>
   </div>
 </template>
 <script>
@@ -52,7 +56,9 @@ Polymer({
   },
 
   domReady: function() {
-    this.$.colorpicker.addEventListener('colorselected', this.colorPicked.bind(this));
+    if(this.stateObj.attributes.color_supported) {
+      this.$.colorpickercontainer.querySelector('#colorpicker').addEventListener('colorselected', this.colorPicked.bind(this));
+    }
   },
 
   brightnessSliderChanged: function(ev, details, target) {
